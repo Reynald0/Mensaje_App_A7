@@ -44,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         String registros = "INSERT INTO "+ TABLE_NAME + " " +
                 "(\"id\", \"responsable\", \"telefono\", \"actividad\", \"area_actividad\", \"descripcion_actividad\", \"fecha_final\", \"resumen_actividad\", \"supervisor\", \"ROWID\") " +
-                "VALUES (1, 'Carlos Escobar Vázquez', 9935901635, 'Desarrollo APP', 'SPyF', 'Crear una APP para Android', '10/12/2017', 'Hacer una APP para Android usando Java', 'Isaac Serrano', 1);\n";
+                "VALUES (1, 'Carlos Escobar Vázquez', 0449935901635, 'Desarrollo APP', 'SPyF', 'Crear una APP para Android', '10/12/2017', 'Hacer una APP para Android usando Java', 'Isaac Serrano', 1);\n";
         db.execSQL(registros);
     }
 
