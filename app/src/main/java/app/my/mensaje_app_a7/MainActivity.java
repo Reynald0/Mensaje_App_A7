@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity
 
     public void obtenerMensajesDesdeBD(View view)
     {
-        // Video: https://www.youtube.com/watch?v=u0Rbi69ZA0U
+        /* Video: https://www.youtube.com/watch?v=u0Rbi69ZA0U */
         String base_url = "http://192.168.1.104:8000/";
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        URL url = null;
+        URL url;
         HttpURLConnection conn;
 
         try
