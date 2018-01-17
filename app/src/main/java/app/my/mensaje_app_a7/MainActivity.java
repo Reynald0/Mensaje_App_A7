@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity
             jsonArr = new JSONArray(json);
             String texto = "";
 
-            System.out.println(jsonArr);
             for (int i = 0; i < jsonArr.length(); i++)
             {
                 JSONObject jsonObject = jsonArr.getJSONObject(i);
