@@ -19,15 +19,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/** Esta aplicación requiere Android 6.0 para arriba */
-public class MainActivity extends AppCompatActivity {
-
+/**
+ * Esta aplicación requiere Android 6.0 para arriba
+ */
+public class MainActivity extends AppCompatActivity
+{
     private EditText numero;
     private EditText mensaje;
     private DatabaseHandler db;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public void enviarSms(View view)
     {
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(numero.getText().toString(), null, mensaje.getText().toString(),null,null);
+        smsManager.sendTextMessage(numero.getText().toString(), null, mensaje.getText().toString(), null, null);
         numero.getText().clear();
         mensaje.getText().clear();
         Toast.makeText(this, "SMS enviado", Toast.LENGTH_LONG).show();
@@ -49,16 +52,13 @@ public class MainActivity extends AppCompatActivity {
     {
         Actividad ultima_actividad = db.getUltimaActividad();
         numero.setText("0" + ultima_actividad.getTelefono());
-        String indicaciones = ultima_actividad.getResponsable() + " tienes asignada la actividad " + ultima_actividad.getActividad() +
-                " en el área de " + ultima_actividad.getArea_actividad() +", hasta la fecha " + ultima_actividad.getFecha_final() +
-                " y consistirá en " + ultima_actividad.getResumen_actividad() + ". " +
-                "Tu supervisor será " + ultima_actividad.getSupervisor() + ". " +
-                "Favor de revisar el sistema para más detalles.";
+        String indicaciones = ultima_actividad.getResponsable() + " tienes asignada la actividad " + ultima_actividad.getActividad() + " en el área de " + ultima_actividad.getArea_actividad() + ", hasta la fecha " + ultima_actividad.getFecha_final() + " y consistirá en " + ultima_actividad.getResumen_actividad() + ". " + "Tu supervisor será " + ultima_actividad.getSupervisor() + ". " + "Favor de revisar el sistema para más detalles.";
         mensaje.setText(indicaciones);
     }
 
     public void obtenerMensajesDesdeBD(View view)
     {
+        // Video: https://www.youtube.com/watch?v=u0Rbi69ZA0U
         String base_url = "http://192.168.1.104:8000/";
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -67,37 +67,32 @@ public class MainActivity extends AppCompatActivity {
         URL url = null;
         HttpURLConnection conn;
 
-        try {
+        try
+        {
             url = new URL(base_url);
             conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("GET");
-
             conn.connect();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
             String inputLine;
-
             StringBuffer response = new StringBuffer();
-
             String json;
 
-            while((inputLine = in.readLine()) != null)
+            while ((inputLine = in.readLine()) != null)
             {
                 response.append(inputLine);
             }
 
             json = response.toString();
-
-
-            JSONArray jsonArr = null;
+            JSONArray jsonArr;
 
             jsonArr = new JSONArray(json);
             String texto = "";
 
             System.out.println(jsonArr);
-            for(int i = 0;i<jsonArr.length();i++){
+            for (int i = 0; i < jsonArr.length(); i++)
+            {
                 JSONObject jsonObject = jsonArr.getJSONObject(i);
                 texto += "ID: " + jsonObject.optString("id") + " ";
                 texto += "TELEFONO: " + jsonObject.optString("telefono") + " ";
@@ -105,11 +100,17 @@ public class MainActivity extends AppCompatActivity {
                 texto += "\n";
                 mensaje.setText(texto);
             }
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e)
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
     }
