@@ -10,13 +10,6 @@
     tools:layout_editor_absoluteY="81dp">
 
     <Button
-        android:id="@+id/btn_rellenar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="rellenarSms"
-        android:text="rellenar" />
-
-    <Button
         android:id="@+id/btn_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,10 +37,4 @@
         android:minLines="6"
         android:scrollbars="vertical" />
 
-    <Button
-        android:id="@+id/btn_enviar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="enviarSms"
-        android:text="Enviar SMS" />
 </LinearLayout>
