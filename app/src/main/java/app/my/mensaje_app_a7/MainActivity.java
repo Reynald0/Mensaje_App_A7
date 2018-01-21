@@ -187,20 +187,20 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids)
         {
-            // try
-            // {
+            try
+            {
                 // Esperar cierta cantidad de milisegundos
-            //    Thread.sleep(DELAY);
-            // }
-            // catch (InterruptedException e)
-            // {
-            //    e.printStackTrace();
-            // }
+                Thread.sleep(DELAY);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
             for(DatosMensaje data : ListaDatosObtenidos)
             {
                 // Si existe numero de telefono
-                // if(data.getNumeroTelefono() != null)
-                //    publishProgress(data);
+                if(data.getNumeroTelefono() != null)
+                    publishProgress(data);
             }
             return null;
         }
@@ -208,14 +208,13 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(DatosMensaje... values)
         {
-            // DatosMensaje data = values[0];
-            // enviarSms(data.getNumeroTelefono(), data.getMensajeTexto());
+            DatosMensaje data = values[0];
+            enviarSms(data.getNumeroTelefono(), data.getMensajeTexto());
         }
 
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            enviarSms("0449934428441", "texto de prueba");
             // Si la lista de datos obtenidos NO es vacia, es decir, tiene registros
             if(!ListaDatosObtenidos.isEmpty())
             {
@@ -224,8 +223,7 @@ public class MainActivity extends AppCompatActivity
             }
             mensaje.append("\nProxima ronda en: " + DELAY / 1000 + " segundos");
             // Al terminar se manda llamar nuevamente la tarea, de esta forma se hace un ciclo infinito
-            // new Consultar().execute();
-
+            new Consultar().execute();
         }
     }
 }
