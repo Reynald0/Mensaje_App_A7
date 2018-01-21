@@ -2,7 +2,7 @@ package app.my.mensaje_app_a7;
 
 /**
  * Esa clase almacena los datos para enviar mensaje a la persona
- * Mensaje: "nombreEmpleado" usted tiene asignada la tarea "nombreTarea" para la fecha "fechaInicioTarea". | SPF
+ * Mensaje: "nombreEmpleado" usted tiene asignada la tarea "nombreTarea" para la fecha "fecha". | SPF
  */
 public class DatosMensaje
 {
@@ -10,17 +10,17 @@ public class DatosMensaje
     private String numeroTelefono;
     private String nombreEmpleado;
     private String nombretarea;
-    private String fechaInicioTarea;
+    private String fecha;
     private String mensajeTexto;
 
-    DatosMensaje(String id, String numeroTelefono, String nombreEmpleado, String nombretarea, String fechaInicioTarea)
+    DatosMensaje(String id, String numeroTelefono, String nombreEmpleado, String nombretarea, String fecha)
     {
         this.id = id;
         this.numeroTelefono = numeroTelefono;
         this.nombreEmpleado = nombreEmpleado;
         this.nombretarea = nombretarea;
-        this.fechaInicioTarea = fechaInicioTarea;
-        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s. | SPF", nombreEmpleado, nombretarea, fechaInicioTarea);
+        this.fecha = fecha;
+        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s. | SPF", nombreEmpleado, nombretarea, fecha);
     }
 
     public String getId()
@@ -63,14 +63,14 @@ public class DatosMensaje
         this.nombretarea = nombretarea;
     }
 
-    public String getFechaInicioTarea()
+    public String getFecha()
     {
-        return fechaInicioTarea;
+        return fecha;
     }
 
-    public void setFechaInicioTarea(String fechaInicioTarea)
+    public void setFecha(String fecha)
     {
-        this.fechaInicioTarea = fechaInicioTarea;
+        this.fecha = fecha;
     }
 
     public String getMensajeTexto()

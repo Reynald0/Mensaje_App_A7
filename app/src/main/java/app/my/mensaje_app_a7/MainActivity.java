@@ -5,7 +5,6 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.view.View;
 import android.widget.EditText;
 
 
@@ -26,8 +25,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity
 {
-    private static EditText mensaje;
-    // private DatabaseHandler db;
+    private static EditText et_log;
     private static String baseUrl = "http://192.168.1.104:8000/";
     private static List<DatosMensaje> ListaDatosObtenidos = new ArrayList<>();
     private static int DELAY = 10000;
@@ -38,10 +36,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mensaje = (EditText) findViewById(R.id.et_mensaje);
-        // db = new DatabaseHandler(getApplicationContext());
-        mensaje.setFocusable(false);
-        mensaje.setText("Iniciando...");
+        et_log = (EditText) findViewById(R.id.et_log);
+        et_log.setFocusable(false);
         new Consultar().execute();
     }
 
@@ -49,14 +45,6 @@ public class MainActivity extends AppCompatActivity
     {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(numeroTelefono, null, mensaje, null, null);
-    }
-
-    public void rellenarSms(View view)
-    {
-        // Actividad ultima_actividad = db.getUltimaActividad();
-        // numero.setText("0" + ultima_actividad.getTelefono());
-        // String indicaciones = ultima_actividad.getResponsable() + " tienes asignada la actividad " + ultima_actividad.getActividad() + " en el área de " + ultima_actividad.getArea_actividad() + ", hasta la fecha " + ultima_actividad.getFecha_final() + " y consistirá en " + ultima_actividad.getResumen_actividad() + ". " + "Tu supervisor será " + ultima_actividad.getSupervisor() + ". " + "Favor de revisar el sistema para más detalles.";
-        // mensaje.setText(indicaciones);
     }
 
     public static void obtenerMensajesDesdeBD()
@@ -98,7 +86,7 @@ public class MainActivity extends AppCompatActivity
                                                          jsonObject.optString("numeroTelefono"),
                                                          jsonObject.optString("nombreEmpleado"),
                                                          jsonObject.optString("nombreTarea"),
-                                                         jsonObject.optString("horaInicio"));
+                                                         jsonObject.optString("fecha"));
 
                     ListaDatosObtenidos.add(data);
                 }
@@ -136,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
             // Si la respuesta de la conexion es exitosa (codigo 200)
             if (conn.getResponseCode() == 200)
-                mensaje.append("\n Mensajes actualizados en base de datos");
+                et_log.setText("\n Mensajes actualizados en base de datos");
         }
         catch (IOException e)
         {
@@ -221,7 +209,7 @@ public class MainActivity extends AppCompatActivity
                 actualizarMensajesEnBD();
                 ListaDatosObtenidos.clear();
             }
-            mensaje.append("\nProxima ronda en: " + DELAY / 1000 + " segundos");
+            et_log.append("\nProxima ronda en: " + DELAY / 1000 + " segundos");
             // Al terminar se manda llamar nuevamente la tarea, de esta forma se hace un ciclo infinito
             new Consultar().execute();
         }
