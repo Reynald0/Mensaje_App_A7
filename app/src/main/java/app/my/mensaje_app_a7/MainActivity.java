@@ -5,10 +5,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,18 +20,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Esta aplicación requiere Android 6.0 para arriba
  */
 public class MainActivity extends AppCompatActivity
 {
-    private EditText numero;
-    private EditText mensaje;
+    private static EditText mensaje;
     // private DatabaseHandler db;
-    private String base_url = "http://192.168.1.104:8000/";
-    private List<Integer> list_ids = new ArrayList<>();
+    private static String baseUrl = "http://192.168.1.104:8000/";
+    private static List<DatosMensaje> ListaDatosObtenidos = new ArrayList<>();
+    private static int DELAY = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,20 +38,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        numero = (EditText) findViewById(R.id.et_numero);
         mensaje = (EditText) findViewById(R.id.et_mensaje);
         // db = new DatabaseHandler(getApplicationContext());
-
+        mensaje.setFocusable(false);
+        mensaje.setText("Iniciando...");
         new Consultar().execute();
     }
 
-    public void enviarSms(View view)
+    public static void enviarSms(String numeroTelefono, String mensaje)
     {
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(numero.getText().toString(), null, mensaje.getText().toString(), null, null);
-        numero.getText().clear();
-        mensaje.getText().clear();
-        Toast.makeText(this, "SMS enviado", Toast.LENGTH_LONG).show();
+        smsManager.sendTextMessage(numeroTelefono, null, mensaje, null, null);
     }
 
     public void rellenarSms(View view)
@@ -64,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         // mensaje.setText(indicaciones);
     }
 
-    public void obtenerMensajesDesdeBD()
+    public static void obtenerMensajesDesdeBD()
     {
         /* Video: https://www.youtube.com/watch?v=u0Rbi69ZA0U */
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -75,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
         try
         {
-            url = new URL(base_url);
+            url = new URL(baseUrl);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
@@ -94,23 +89,18 @@ public class MainActivity extends AppCompatActivity
 
                 json = response.toString();
                 JSONArray jsonArr;
-
                 jsonArr = new JSONArray(json);
-                String texto = "";
 
                 for (int i = 0; i < jsonArr.length(); i++)
                 {
                     JSONObject jsonObject = jsonArr.getJSONObject(i);
+                    DatosMensaje data = new DatosMensaje(jsonObject.optString("id"),
+                                                         jsonObject.optString("numeroTelefono"),
+                                                         jsonObject.optString("nombreEmpleado"),
+                                                         jsonObject.optString("nombreTarea"),
+                                                         jsonObject.optString("horaInicio"));
 
-                    list_ids.add(jsonObject.optInt("id"));
-
-                    texto += "ID: " + jsonObject.optString("id") + " ";
-                    texto += "EMPLEADO: " + jsonObject.optString("nombreEmpleado") + " ";
-                    texto += "TELEFONO: " + jsonObject.optString("numeroTelefono") + " ";
-                    texto += "TAREA: " + jsonObject.optString("nombreTarea") + " ";
-                    texto += "\n";
-                    mensaje.setText(texto);
-                    Log.i("AVEL", texto);
+                    ListaDatosObtenidos.add(data);
                 }
             }
         }
@@ -127,7 +117,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void actualizarMensajesABD()
+    /*
+     * Este metodo envia por medio de PUT los ID de los mensajes que han sido enviados
+     */
+    public static void actualizarMensajesEnBD()
     {
         URL url;
         HttpURLConnection conn = null;
@@ -141,19 +134,9 @@ public class MainActivity extends AppCompatActivity
             conn.setRequestMethod("PUT");
             conn.connect();
 
-            System.out.println(conn.getResponseCode());
+            // Si la respuesta de la conexion es exitosa (codigo 200)
             if (conn.getResponseCode() == 200)
-            {
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-                Log.d("HECHO????????????????????????", "PARECE");
-            }
+                mensaje.append("\n Mensajes actualizados en base de datos");
         }
         catch (IOException e)
         {
@@ -168,31 +151,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public String construirURLActualizacion()
+    public static String construirURLActualizacion()
     {
-        StringBuilder update_url = new StringBuilder(base_url + "update/ids/");
-        String id_format = "id[]=";
+        StringBuilder updateUrl = new StringBuilder(baseUrl + "update/ids/");
+        String idFormat = "id[]=";
 
-        for (int i = 0; i < list_ids.size(); i++)
+        for (int i = 0; i < ListaDatosObtenidos.size(); i++)
         {
             // Si es la primera iteracion solo se agrega el simbolo "?" (signo de
             // interrogacion)
-            if (i == 0) update_url.append("?");
+            if (i == 0) updateUrl.append("?");
 
-            update_url.append(id_format);
-            update_url.append(list_ids.get(i));
+            updateUrl.append(idFormat);
+            DatosMensaje data = ListaDatosObtenidos.get(i);
+            updateUrl.append(data.getId());
 
             // Si es la ultima iteracion se omite el simbolo "&" al final
-            if (i + 1 == list_ids.size()) break;
+            if (i + 1 == ListaDatosObtenidos.size()) break;
 
             // De la segunda iteracion a la penultima se agrega el simbolo "&"
-            update_url.append("&");
+            updateUrl.append("&");
         }
 
-        return update_url.toString();
+        return updateUrl.toString();
     }
 
-    private class Consultar extends AsyncTask<Void, Void, Void>
+    private static class Consultar extends AsyncTask<Void, DatosMensaje, Void>
     {
         @Override
         protected void onPreExecute()
@@ -203,25 +187,42 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids)
         {
-
             try
             {
-                Thread.sleep(10000);
+                // Esperar cierta cantidad de milisegundos
+                Thread.sleep(DELAY);
             }
             catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
+            for(DatosMensaje data : ListaDatosObtenidos)
+            {
+                // Si existe numero de telefono
+                if(data.getNumeroTelefono() != null)
+                    publishProgress(data);
+            }
             return null;
         }
 
+        @Override
+        protected void onProgressUpdate(DatosMensaje... values)
+        {
+            // DatosMensaje data = values[0];
+            // enviarSms(data.getNumeroTelefono(), data.getMensajeTexto());
+        }
 
         @Override
         protected void onPostExecute(Void aVoid)
         {
-            mensaje.setText("");
-            actualizarMensajesABD();
-            list_ids.clear();
+            // Si la lista de datos obtenidos NO es vacia, es decir, tiene registros
+            if(!ListaDatosObtenidos.isEmpty())
+            {
+                actualizarMensajesEnBD();
+                ListaDatosObtenidos.clear();
+            }
+            mensaje.append("\nProxima ronda en: " + DELAY / 1000 + " segundos");
+            // Al terminar se manda llamar nuevamente la tarea, de esta forma se hace un ciclo infinito
             new Consultar().execute();
         }
     }

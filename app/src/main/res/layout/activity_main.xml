@@ -9,21 +9,6 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="obtenerMensajesDesdeBD"
-        android:text="Test" />
-
-    <EditText
-        android:id="@+id/et_numero"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Número"
-        android:inputType="phone" />
-
     <EditText
         android:id="@+id/et_mensaje"
         android:layout_width="match_parent"
