@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     // private DatabaseHandler db;
     private static String baseUrl = "http://192.168.1.104:8000/";
     private static List<DatosMensaje> ListaDatosObtenidos = new ArrayList<>();
-    private static int DELAY = 10000;
+    private static int DELAY = 60000 * 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -208,8 +208,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(DatosMensaje... values)
         {
-            // DatosMensaje data = values[0];
-            // enviarSms(data.getNumeroTelefono(), data.getMensajeTexto());
+            DatosMensaje data = values[0];
+            enviarSms(data.getNumeroTelefono(), data.getMensajeTexto());
         }
 
         @Override

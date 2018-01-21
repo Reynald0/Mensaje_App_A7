@@ -20,7 +20,7 @@ public class DatosMensaje
         this.nombreEmpleado = nombreEmpleado;
         this.nombretarea = nombretarea;
         this.fechaInicioTarea = fechaInicioTarea;
-        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s", nombreEmpleado, nombretarea, fechaInicioTarea);
+        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s. | SPF", nombreEmpleado, nombretarea, fechaInicioTarea);
     }
 
     public String getId()
