@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     private static EditText et_log;
     private static String baseUrl = "http://192.168.1.104:8000/";
     private static List<DatosMensaje> ListaDatosObtenidos = new ArrayList<>();
-    private static int DELAY = 10000;
+    private static int ESPERA_MILISEGUNDOS = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
             try
             {
                 // Esperar cierta cantidad de milisegundos
-                Thread.sleep(DELAY);
+                Thread.sleep(ESPERA_MILISEGUNDOS);
             }
             catch (InterruptedException e)
             {
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity
                 actualizarMensajesEnBD();
                 ListaDatosObtenidos.clear();
             }
-            et_log.append("\nProxima ronda en: " + DELAY / 1000 + " segundos");
+            et_log.append("\nProxima ronda en: " + ESPERA_MILISEGUNDOS / 1000 + " segundos");
             // Al terminar se manda llamar nuevamente la tarea, de esta forma se hace un ciclo infinito
             new Consultar().execute();
         }
