@@ -17,7 +17,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +49,33 @@ public class MainActivity extends AppCompatActivity
     {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(numeroTelefono, null, mensaje, null, null);
+    }
+
+    public static String obtenerFechaFormateada(String fechaTexto)
+    {
+        // Documentacion del significado de las letras para usarse en el formato
+        // https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+
+        // El formato que se lee del servicio web, por ejemplo: 2017-01-06T06:00:00.000Z
+        String formato_entrada = "yyyy-MM-dd'T'";
+
+        // El formato como deberia mostrarse, por ejemplo: 22/01/2018 (DIA_MES/MES/AÑO)
+        String formato_salida = "dd/MM/yyyy";
+
+        DateFormat formatoSimple = new SimpleDateFormat(formato_entrada);
+        Date date = null;
+        try
+        {
+            date = formatoSimple.parse(fechaTexto);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        DateFormat formateador = new SimpleDateFormat(formato_salida);
+        String formatoString = formateador.format(date);
+
+        return formatoString;
     }
 
     public static void obtenerMensajesDesdeBD()
@@ -82,11 +113,12 @@ public class MainActivity extends AppCompatActivity
                 for (int i = 0; i < jsonArr.length(); i++)
                 {
                     JSONObject jsonObject = jsonArr.getJSONObject(i);
-                    DatosMensaje data = new DatosMensaje(jsonObject.optString("id"),
-                                                         jsonObject.optString("numeroTelefono"),
-                                                         jsonObject.optString("nombreEmpleado"),
-                                                         jsonObject.optString("nombreTarea"),
-                                                         jsonObject.optString("fecha"));
+                    String id = jsonObject.optString("id");
+                    String numeroTelefono = jsonObject.optString("numeroTelefono");
+                    String nombreEmpleado = jsonObject.optString("nombreEmpleado");
+                    String nombreTarea = jsonObject.optString("nombreTarea");
+                    String fecha = obtenerFechaFormateada(jsonObject.optString("fecha"));
+                    DatosMensaje data = new DatosMensaje(id, numeroTelefono, nombreEmpleado, nombreTarea, fecha);
 
                     ListaDatosObtenidos.add(data);
                 }
@@ -184,11 +216,10 @@ public class MainActivity extends AppCompatActivity
             {
                 e.printStackTrace();
             }
-            for(DatosMensaje data : ListaDatosObtenidos)
+            for (DatosMensaje data : ListaDatosObtenidos)
             {
                 // Si existe numero de telefono
-                if(data.getNumeroTelefono() != null)
-                    publishProgress(data);
+                if (data.getNumeroTelefono() != null) publishProgress(data);
             }
             return null;
         }
@@ -204,7 +235,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid)
         {
             // Si la lista de datos obtenidos NO es vacia, es decir, tiene registros
-            if(!ListaDatosObtenidos.isEmpty())
+            if (!ListaDatosObtenidos.isEmpty())
             {
                 actualizarMensajesEnBD();
                 ListaDatosObtenidos.clear();
