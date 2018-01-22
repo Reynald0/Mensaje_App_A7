@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Esta aplicación requiere Android 6.0 para arriba
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         // El formato como deberia mostrarse, por ejemplo: 22/01/2018 (DIA_MES/MES/AÑO)
         String formato_salida = "dd/MM/yyyy";
 
-        DateFormat formatoSimple = new SimpleDateFormat(formato_entrada);
+        DateFormat formatoSimple = new SimpleDateFormat(formato_entrada, new Locale("es","MX"));
         Date date = null;
         try
         {
@@ -72,10 +73,9 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
-        DateFormat formateador = new SimpleDateFormat(formato_salida);
-        String formatoString = formateador.format(date);
+        DateFormat formateador = new SimpleDateFormat(formato_salida, new Locale("es","MX"));
 
-        return formatoString;
+        return formateador.format(date);
     }
 
     public static void obtenerMensajesDesdeBD()
