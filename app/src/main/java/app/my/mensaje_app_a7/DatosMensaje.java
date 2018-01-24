@@ -11,16 +11,20 @@ public class DatosMensaje
     private String nombreEmpleado;
     private String nombretarea;
     private String fecha;
+    private String hora;
     private String mensajeTexto;
 
-    DatosMensaje(String id, String numeroTelefono, String nombreEmpleado, String nombretarea, String fecha)
+
+    DatosMensaje(String id, String numeroTelefono, String nombreEmpleado, String nombretarea, String fecha, String hora)
     {
         this.id = id;
         this.numeroTelefono = numeroTelefono;
         this.nombreEmpleado = nombreEmpleado;
         this.nombretarea = nombretarea;
         this.fecha = fecha;
-        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s. | SPF", nombreEmpleado, nombretarea, fecha);
+        this.hora = hora;
+        this.mensajeTexto = String.format("%s usted tiene asignada la tarea %s para la fecha %s a las %s. | SPF",
+                nombreEmpleado, nombretarea, fecha, hora);
     }
 
     public String getId()
@@ -28,49 +32,9 @@ public class DatosMensaje
         return id;
     }
 
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
     public String getNumeroTelefono()
     {
         return numeroTelefono;
-    }
-
-    public void setNumeroTelefono(String numeroTelefono)
-    {
-        this.numeroTelefono = numeroTelefono;
-    }
-
-    public String getNombreEmpleado()
-    {
-        return nombreEmpleado;
-    }
-
-    public void setNombreEmpleado(String nombreEmpleado)
-    {
-        this.nombreEmpleado = nombreEmpleado;
-    }
-
-    public String getNombretarea()
-    {
-        return nombretarea;
-    }
-
-    public void setNombretarea(String nombretarea)
-    {
-        this.nombretarea = nombretarea;
-    }
-
-    public String getFecha()
-    {
-        return fecha;
-    }
-
-    public void setFecha(String fecha)
-    {
-        this.fecha = fecha;
     }
 
     public String getMensajeTexto()

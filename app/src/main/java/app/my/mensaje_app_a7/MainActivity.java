@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity
                     String nombreEmpleado = jsonObject.optString("nombreEmpleado");
                     String nombreTarea = jsonObject.optString("nombreTarea");
                     String fecha = obtenerFechaFormateada(jsonObject.optString("fecha"));
-                    DatosMensaje data = new DatosMensaje(id, numeroTelefono, nombreEmpleado, nombreTarea, fecha);
+                    String hora = jsonObject.optString("hora");
+                    DatosMensaje data = new DatosMensaje(id, numeroTelefono, nombreEmpleado, nombreTarea, fecha, hora);
 
                     ListaDatosObtenidos.add(data);
                 }
